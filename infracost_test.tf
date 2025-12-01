@@ -1,6 +1,6 @@
 resource "google_compute_instance" "my_instance" {
-  zone         = "europe-west1-b"
-  name         = "infracost-test"
+  zone = "europe-west1-b"
+  name = "infracost-test"
 
   machine_type = "n1-standard-16"
 

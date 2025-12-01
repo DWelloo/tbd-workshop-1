@@ -1,6 +1,7 @@
 output "gcs_bucket" {
   description = "GCS bucket for storing Apache Airflow DAGs"
-  value       = module.composer.gcs_bucket
+  #value       = module.composer.gcs_bucket
+  value = var.enable_composer ? module.composer[0].gcs_bucket : null
 }
 
 output "data_service_account" {

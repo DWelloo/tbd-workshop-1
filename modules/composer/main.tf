@@ -61,7 +61,7 @@ module "composer" {
   }
   web_server = {
     cpu        = 0.5
-    memory_gb  = 0.875
+    memory_gb  = 1
     storage_gb = 1
   }
   worker = {

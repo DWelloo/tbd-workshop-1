@@ -15,8 +15,8 @@ variable "enable_composer" {
   default     = false
 }
 
-## Vertex AI Workbench has been replaced with Jupyter on Dataproc
-#variable "ai_notebook_instance_owner" {
-#  type        = string
-#  description = "Vertex AI workbench owner"
-#}
+Vertex AI Workbench has been replaced with Jupyter on Dataproc
+variable "ai_notebook_instance_owner" {
+  type        = string
+  description = "Vertex AI workbench owner"
+}

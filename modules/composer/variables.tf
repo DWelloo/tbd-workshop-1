@@ -47,3 +47,9 @@ variable "env_variables" {
   type        = map(string)
   description = "Apache Airflow variables to set"
 }
+
+variable "enable_composer" {
+  type        = bool
+  description = "Enable Composer deployment"
+  default     = true
+}

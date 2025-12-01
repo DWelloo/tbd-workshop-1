@@ -38,6 +38,7 @@ resource "google_compute_subnetwork" "composer-subnet" {
 
 
 module "composer" {
+  count      = var.enable_composer ? 1 : 0
   depends_on = [google_project_service.api, google_project_iam_member.composer-member]
   source     = "terraform-google-modules/composer/google//modules/create_environment_v2"
   version    = "~> 5.0.0"
@@ -55,21 +56,21 @@ module "composer" {
   env_variables             = var.env_variables
   scheduler = {
     cpu        = 0.5
-    memory_gb  = 1.875
+    memory_gb  = 0.875
     storage_gb = 1
     count      = 1
   }
   web_server = {
     cpu        = 0.5
-    memory_gb  = 1.875
+    memory_gb  = 1
     storage_gb = 1
   }
   worker = {
     cpu        = 0.5
-    memory_gb  = 1.875
+    memory_gb  = 0.875
     storage_gb = 1
     min_count  = 1
-    max_count  = 3
+    max_count  = 1
   }
 }
 

@@ -5,12 +5,16 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
 1. Authors:
 
    ***enter your group nr***
+   z7
 
    ***link to forked repo***
+   https://github.com/DWelloo/tbd-workshop-1
    
 2. Follow all steps in README.md.
 
 3. From avaialble Github Actions select and run destroy on main branch.
+
+![Terraform Destroy Workflow](screenshots/destroy_workflow.png)
    
 4. Create new git branch and:
     1. Modify tasks-phase1.md file.

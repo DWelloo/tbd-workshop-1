@@ -51,5 +51,5 @@ variable "env_variables" {
 variable "enable_composer" {
   type        = bool
   description = "Enable Composer deployment"
-  default     = true
+  default     = false
 }

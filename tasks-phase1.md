@@ -147,28 +147,72 @@ A
     2. List of buckets for disposal
     
     ***place your diagram here***
+    ![alt text](screenshots/task7-diag.png)
 
 8. Create a new PR and add costs by entering the expected consumption into Infracost
 For all the resources of type: `google_artifact_registry`, `google_storage_bucket`, `google_service_networking_connection`
 create a sample usage profiles and add it to the Infracost task in CI/CD pipeline. Usage file [example](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) 
 
    ***place the expected consumption you entered here***
+   ![alt text](screenshots/task8_exptected.png)
 
    ***place the screenshot from infracost output here***
+   ![alt text](screenshots/task8.png)
 
 9. Create a BigQuery dataset and an external table using SQL
-    
+    ![alt text](screenshots/task9-1.png)
+    ![alt text](screenshots/task9-2.png)
     ***place the code and output here***
    
     ***why does ORC not require a table schema?***
+    ORC is a **self-describing** columnar file format, which means that the file itself already contains all necessary schema information, including:
+    - column names  
+    - data types  
+    - column order and structure  
+    - metadata and statistics  
+
+    Because the schema is embedded directly in the ORC file, BigQuery can automatically read it when creating an external table.
 
 10. Find and correct the error in spark-job.py
 
     ***describe the cause and how to find the error***
+    Running the job helps find the error, it results in failure, 
+    "message": "The specified bucket does not exist."
+    The problem is 
+    ```
+    DATA_BUCKET = "gs://tbd-2025z-9901-data/data/shakespeare/"
+    ```
+
+    , it doesn't exist, should be replaced with:
+    ```
+    
+    DATA_BUCKET = "gs://tbd-2025z-324021-bigqdata/data/shakespeare/"
+    ```
+    Finally, running the same task now works:
+    ![alt text](screenshots/task10.png)
 
 11. Add support for preemptible/spot instances in a Dataproc cluster
 
     ***place the link to the modified file and inserted terraform code***
+    Link to file: [modified file](https://github.com/DWelloo/tbd-workshop-1/blob/master/modules/dataproc/main.tf)
+    ```
+    preemptible_worker_config {
+      num_instances  = 2
+      preemptibility = "SPOT"
+
+      disk_config {
+        boot_disk_type    = "pd-standard"
+        boot_disk_size_gb = 100
+      }
+
+      instance_flexibility_policy {
+        instance_selection_list {
+          machine_types = [var.machine_type]
+          rank          = 1
+        }
+      }
+    }
+    ```
     
 12. Triggered Terraform Destroy on Schedule or After PR Merge. Goal: make sure we never forget to clean up resources and burn money.
 

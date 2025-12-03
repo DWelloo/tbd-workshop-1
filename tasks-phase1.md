@@ -230,7 +230,61 @@ Steps:
   3. Test the trigger (schedule or cleanup-tagged PR)
      
 ***paste workflow YAML here***
+```
+name: Auto Destroy
+
+on:
+  schedule:
+    - cron: '0 20 * * *'
+
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+permissions: read-all
+jobs:
+  destroy-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
+      issues: write
+
+    steps:
+    - name: 'Check if commit message does not contain [CLEANUP]'
+      if: github.event_name == 'push'
+      id: check-commit
+      env:
+        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+      run: |
+        echo "Commit Message: $COMMIT_MESSAGE"
+        if [[ "$COMMIT_MESSAGE" != *"[CLEANUP]"* ]]; then
+          echo "Commit message does not contain [CLEANUP]. Stopping workflow."
+          exit 1
+        fi
+    - uses: 'actions/checkout@v3'
+    - uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.11.0
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        token_format: 'access_token'
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER_NAME }}
+        service_account: ${{ secrets.GCP_WORKLOAD_IDENTITY_SA_EMAIL }}
+    - name: Terraform Init
+      id: init
+      run: terraform init -backend-config=env/backend.tfvars
+    - name: Terraform Destroy
+      id: destroy
+      run: terraform destroy -no-color -var-file env/project.tfvars -auto-approve
+      continue-on-error: false
+```
 
 ***paste screenshot/log snippet confirming the auto-destroy ran***
-
+![alt text](screenshots/image_2025-12-04_001059135.png)
 ***write one sentence why scheduling cleanup helps in this workshop***
+Scheduling cleanup helps ensure that unused cloud resources are automatically destroyed, preventing unnecessary costs and keeping the workshop environment tidy.
